@@ -1,0 +1,19 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="flogo.jpeg"><title>LMG</title><link href="css/app.3fec9fc0.css" rel="preload" as="style"><link href="css/chunk-vendors.7af5ec44.css" rel="preload" as="style"><link href="js/app.f50e4b5b.js" rel="preload" as="script"><link href="js/chunk-vendors.0253aeae.js" rel="preload" as="script"><link href="css/chunk-vendors.7af5ec44.css" rel="stylesheet"><link href="css/app.3fec9fc0.css" rel="stylesheet"></head><body style="zoom: 110%;"><noscript><strong>We're sorry but LMG doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"></div><script src="js/chunk-vendors.0253aeae.js"></script><script src="js/app.f50e4b5b.js"></script></body><script>var a = document.getElementById('disc-50');
+  a.onclick = function () {
+    Clipboard_CopyTo("T9TTVSQB");
+    var div = document.getElementById('code-success');
+    div.style.display = 'block';
+    setTimeout(function () {
+      document.getElementById('code-success').style.display = 'none';
+    }, 900);
+
+  };
+
+  function Clipboard_CopyTo(value) {
+    var tempInput = document.createElement("input");
+    tempInput.value = value;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+  }</script></html>
