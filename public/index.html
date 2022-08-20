@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
+  <link rel="icon" href="<%= BASE_URL %>flogo.jpeg">
+  <title>LMG</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+</head>
+
+<body style=" zoom: 110%;">
+  <noscript>
+    <strong>We're sorry but LMG doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
+<script type="text/javascript">
+  var a = document.getElementById('disc-50');
+  a.onclick = function () {
+    Clipboard_CopyTo("T9TTVSQB");
+    var div = document.getElementById('code-success');
+    div.style.display = 'block';
+    setTimeout(function () {
+      document.getElementById('code-success').style.display = 'none';
+    }, 900);
+
+  };
+
+  function Clipboard_CopyTo(value) {
+    var tempInput = document.createElement("input");
+    tempInput.value = value;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+  }
+</script>
+
+</html>

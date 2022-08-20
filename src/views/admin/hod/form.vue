@@ -1,146 +1,115 @@
-
 <template>
-  <v-app id="inspire">
-    <v-app-bar
-      app
-      color="white"
-      flat
-    >
-     
-    </v-app-bar>
-
-    <v-main class="grey lighten-3">
-      <v-container>
-        <v-row>
-         
-
-          <v-col>
-            <v-sheet
-              min-height="70vh"
-              rounded="lg"
-            >
-            
-
-  <v-card>
+   <v-card style="max-width:800px; margin-left:auto;margin-right:auto;margin-top:22px;padding:22px">
     <v-card-title>
-      Nutrition
+      Add student
       <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
-      ></v-text-field>
-    </v-card-title>
-    <v-data-table
-      :headers="headers"
-      :items="mdata"
-      :search="search"
-      :page.sync="page"
-      :items-per-page="itemsPerPage"
-      :loading="loading"
-      loading-text="Loading... Please wait"
-      hide-default-footer
-      
-      class="selected"
-      @page-count="pageCount = $event"
-      @click:row="handleClick"
+      </v-card-title>
+  
+  
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation
+  >
+    <v-text-field
+      v-model="name"
+      :counter="10"
+      :rules="nameRules"
+      label="Name"
+      required
+    ></v-text-field>
 
-    ></v-data-table>
-    <div class="text-center pt-2">
-      <v-pagination
-        v-model="page"
-        :length="pageCount"
-      ></v-pagination>
-      <!-- <v-text-field
-        :value="itemsPerPage"
-        label="Items per page"
-        type="number"
-        min="-1"
-        max="15"
-        @input="itemsPerPage = parseInt($event, 10)"
-      ></v-text-field> -->
-    </div>
-  </v-card>
-              <!--  -->
-            </v-sheet>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+    <v-text-field
+      v-model="email"
+      :rules="emailRules"
+      label="E-mail"
+      required
+    ></v-text-field>
+
+    <v-text-field
+      v-model="code"
+      :counter="10"
+      :rules="codeRules"
+      label="code"
+      required
+    ></v-text-field>
+
+
+    <v-btn
+      :disabled="!valid"
+      color="success"
+      class="mr-4"
+      @click="validate"
+    >
+      Validate
+    </v-btn>
+
+    <v-btn
+      color="error"
+      class="mr-4"
+      @click="reset"
+    >
+      Reset Form
+    </v-btn>
+
+    <v-btn
+      color="warning"
+      @click="resetValidation"
+    >
+      Reset Validation
+    </v-btn>
+  </v-form>
+   </v-card>
 </template>
-
 <script>
-  import api from "../../services/api";
   export default {
-    data: () => ({
-      links: [
-        'Dashboard',
-        'Messages',
-        'Profile',
-        'Updates',
-      ],
-      page: 1,
-      pageCount: 0,
-      itemsPerPage: 5,
-       search: '',
-        headers: [
-          {
-            text: 'Name',
-            align: 'start',
-            sortable: false,
-            value: 'name',
-          },
-          { text: 'Role', value: 'role' },
-          { text: 'Email', value: 'email' },
-          { text: 'Code ', value: 'code' },
-          // { text: 'Iron (%)', value: 'iron' },
-        ],
-        mdata: [
-          {
-            name: 'loading',
-            role: 'loading',
-            email: 'loading',
-            code: 'loading',
-          },
-        ],
-        loading:true,
-    }),
-    methods:{
-      handleClick(row) {
-    console.log(row.fat)
-  },
-  init(){
-    this.loading = true
-    api.get('hod').then((response) => {
-      console.log("mdata: "+ JSON.stringify(response.data.data));
-          
-          if(response.data.val==2){ 
-            this.mdata = response.data.data;
-          }
-          this.loading = false
-   
-}).catch(function (response) {
-          //handle error
-          console.log("error"+JSON.stringify(response))
-          
-          this.loading = false
-      });
-  }
+      props: {
+    eItem: {
+      // type: Array,
+      required: true,
     },
-     mounted() {
-      this.init()
+  },
+    data: () => ({
+      valid: true,
+      name: '',
+      nameRules: [
+        v => !!v || 'Name is required',
+        v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+      ],
+      code:'',
+      codeRules: [
+        v => !!v || 'Code is required',
+        v => (v && v.length <= 10) || 'Code must be less than 10 characters',
+      ],
+      email: '',
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      select: null,
+      items: [
+        'Item 1',
+        'Item 2',
+        'Item 3',
+        'Item 4',
+      ],
+      checkbox: false,
+    }),
+
+    methods: {
+      validate () {
+        this.$refs.form.validate()
+      },
+      reset () {
+        this.$refs.form.reset()
+      },
+      resetValidation () {
+        this.$refs.form.resetValidation()
+      },
+    },
+     mounted () {
+      console.log(this.eItem)
+      this.name=this.eItem.name
      }
   }
 </script>
-<style lang="scss" scoped>
-// table{
-//   background-color: red !important;
-// }
-.selected {
-    background-color: #fff;
-    cursor:pointer;
-}
-</style>
