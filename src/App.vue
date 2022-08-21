@@ -5,7 +5,7 @@
     <mdb-navbar-brand to="/" >
            <!-- <img src="./assets/img/flogo.jpeg" alt=" Cloudia" style="max-width:43px;background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgb(0 0 0 / 0%) 100%);border-radius: 5px;" > -->
            <span style="color: white;font-weight: 500;text-shadow: rgb(203 109 255) 1px 1px 2px;">
-    Ztech </span>
+    Zetech </span>
     </mdb-navbar-brand>
 
   </mdb-navbar>
@@ -21,7 +21,7 @@
         Copyright:
         <a
           href="/"
-          >Ztech</a
+          >Zetech</a
         >
       </p>
     </div>

@@ -58,7 +58,8 @@ Route::group(['middleware' => ['role:hod'],
 
 Route::group(['middleware' => ['role:lib'],
 'prefix' => 'auth'], function() {
-    Route::get('/lib', [LibController::class, 'index']); 
+    Route::get('/lib', [LibController::class, 'index']);
+    Route::get('/lib_all', [LibController::class, 'all']); 
     Route::get('/lib_a', [LibController::class, 'StudentArears']); 
     Route::post('/lib_d', [LibController::class, 'Libdata']); 
     
@@ -66,23 +67,31 @@ Route::group(['middleware' => ['role:lib'],
     Route::post('/u_lib', [LibController::class, 'update']);
     Route::post('/lib_u', [LibController::class, 'update1']); 
     Route::post('/lib_del', [LibController::class, 'destroy']); 
+    Route::post('/lswitch', [LibController::class, 'switch']); 
 });
 Route::group(['middleware' => ['role:finance'],
 'prefix' => 'auth'], function() {
     Route::get('/finance', [FinanceController::class, 'index']); 
     Route::get('/finance_f', [FinanceController::class, 'StudentArears']); 
+    Route::get('/finance_all', [FinanceController::class, 'all']); 
     Route::post('/finance', [FinanceController::class, 'create']); 
+    Route::post('/finance_u', [FinanceController::class, 'update1']); 
     Route::post('/payment', [FinanceController::class, 'payment']); 
-    Route::post('/finance_d', [FinanceController::class, 'Userdata']); 
+    Route::post('/finance_d', [FinanceController::class, 'Userdata']);
+    Route::post('/finance_del', [FinanceController::class, 'destroy']);
+    Route::post('/fswitch', [FinanceController::class, 'switch']); 
 });
 
 Route::group(['middleware' => ['role:gown'],
 'prefix' => 'auth'], function() {
     Route::get('/gown', [GownController::class, 'index']); 
     Route::get('/gown_f', [GownController::class, 'StudentGowns']); 
+    Route::get('/gown_all', [GownController::class, 'all']); 
     Route::post('/gown', [GownController::class, 'create']); 
     Route::post('/gown_u', [GownController::class, 'update']); 
     Route::post('/gown_d', [GownController::class, 'Userdata']); 
+    Route::post('/gown_del', [GownController::class, 'destroy']); 
+    Route::post('/switch', [GownController::class, 'switch']); 
 });
 
 Route::group(['middleware' => ['role:student'],

@@ -1,45 +1,30 @@
 
 <template>
   <v-app id="inspire">
-    <v-app-bar
+      <v-app-bar
       app
       
       color="#3c0d0b"
       flat
     >
-       <h4 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;text-shadow: #cb6dff 1px 1px 2px;margin-top: 5px;margin-left: auto;margin-right: auto;" >{{fname}}</h4>
+       <h4 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;text-shadow: #cb6dff 1px 1px 2px;margin-top: 5px;margin-left: auto;margin-right: auto;" >Library</h4>
     </v-app-bar>
- <mdb-edge-header color="" style="background-color: #3c0d0b;margin-top:-12px;">
-        <div class="home-page-background"></div>
-           <div class="container">
-              <div class="loading-box" v-if="loading">
-                <div class="loader"></div>
-              </div>
-        <div class="row">
-          <div class="col-lg-8 text-center mx-auto" style="margin-top:87px;position: fixed;left: 0;width:100%;">
-          <h5 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;" >code: {{fcode}}</h5>
-          <h5 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;"  >email: {{femail}}</h5>
-        </div>
-        </div>
-           </div>
-         
-      </mdb-edge-header>
+
     <v-main class="grey lighten-3">
       <v-container>
-     
+        <v-row>
+         
+
+          <v-col>
             <v-sheet
               min-height="70vh"
               rounded="lg"
             >
-
             
 
-  <v-card style="margin-top:-122px">
-  
+  <v-card>
     <v-card-title>
-      <mdb-btn style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;" color="" type="submit" 
-       @click="fBack"
-      >All students</mdb-btn>
+      {{fts}} students
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -50,7 +35,7 @@
       ></v-text-field>
     </v-card-title>
     <v-data-table
-  
+   
       :headers="headers"
       :items="mdata"
       :search="search"
@@ -69,11 +54,12 @@
       <v-toolbar
         flat
       >
-       <v-switch
-      v-model="switch1"
-      :label="switch2"
-       @change="cleare_user"
-    ></v-switch>
+       <a-radio-group v-model="fStudents" @change="fChange" size="small">
+        <a-radio-button checked="fchecked" value="a">All</a-radio-button>
+        <a-radio-button value="b">Admitted</a-radio-button>
+        <a-radio-button value="c">Finance</a-radio-button>
+        <!-- <a-radio-button value="d">Chengdu</a-radio-button> -->
+      </a-radio-group>
         <!-- <v-toolbar-title>My CRUD</v-toolbar-title> -->
         <v-divider
           class="mx-4"
@@ -85,18 +71,17 @@
           v-model="dialog"
           max-width="500px"
         >
-          <template v-slot:activator="{  on, attrs }">
-            <v-btn
+          <template v-slot:activator="{  attrs }">
+            <!-- <v-btn
               color="primary"
               dark
               class="mb-2"
-               v-bind="attrs"
-              v-on="on"
-              style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;"
+              v-bind="attrs"
+             
+              @click="admit"
             >
-              Add
-            </v-btn>
-            
+              Admit selected
+            </v-btn> -->
           </template>
           <v-card>
             <v-card-title>
@@ -112,8 +97,8 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="addedItem.name"
-                      label="name"
+                      v-model="editedItem.name"
+                      label="Dessert name"
                     ></v-text-field>
                   </v-col>
                   <v-col
@@ -122,11 +107,40 @@
                     md="4"
                   >
                     <v-text-field
-                      v-model="addedItem.value"
-                      label="Value"
+                      v-model="editedItem.calories"
+                      label="Calories"
                     ></v-text-field>
                   </v-col>
-            
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.fat"
+                      label="Fat (g)"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.carbs"
+                      label="Carbs (g)"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="editedItem.protein"
+                      label="Protein (g)"
+                    ></v-text-field>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -163,7 +177,7 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.actions1="{ item }">
+    <template v-slot:item.actions="{ item }">
       <v-icon
         small
         class="mr-2"
@@ -171,16 +185,12 @@
       >
         mdi-pencil
       </v-icon>
-     
-    </template>
-    <template v-slot:item.actions="{ item }">
-    
-      <v-icon
+      <!-- <v-icon
         small
         @click="deleteItem(item)"
       >
         mdi-delete
-      </v-icon>
+      </v-icon> -->
     </template>
     <template v-slot:no-data>
       <v-btn
@@ -223,17 +233,24 @@
     ></v-text-field>
 
     <v-text-field
-      v-model="value"
-      :rules="valueRules"
-      label="Value"
+      v-model="email"
+      :rules="emailRules"
+      label="E-mail"
       required
     ></v-text-field>
 
+    <v-text-field
+      v-model="code"
+      :counter="10"
+      :rules="codeRules"
+      label="code"
+      required
+    ></v-text-field>
       <v-select
-      v-model="status"
+      v-model="admission"
       :items="items"
-      :rules="[v => !!v || 'status is required']"
-      label="status"
+      :rules="[v => !!v || 'Admission is required']"
+      label="Item"
       required
     ></v-select>
 
@@ -262,7 +279,8 @@
    
               <!--  -->
             </v-sheet>
-         
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
   </v-app>
@@ -271,19 +289,15 @@
 <script>
   // import mForm from "./form.vue"
   import api from "../../services/api";
-import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
   export default {
      components: {
-      mdbEdgeHeader,
-      mdbBtn
+      // mForm
      },
      
     data: () => ({
-      switch1:false,
-      switch2:"Not cleared",
-      fname:"",
-      fcode:"",
-      femail:"",
+      fts:"All",
+      fStudents:"a",
+      fchecked:true,
       loading1:true,
       valid: true,
       name: '',
@@ -291,12 +305,20 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
         v => !!v || 'Name is required',
         v => (v && v.length <= 10) || 'Name must be less than 10 characters',
       ],
-      value: 0,
-    
-      status: null,
+      code:'',
+      codeRules: [
+        v => !!v || 'Code is required',
+        v => (v && v.length <= 10) || 'Code must be less than 10 characters',
+      ],
+      email: '',
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      admission: null,
       items: [
         'pending',
-        'cleared',
+        'admitted',
       ],
       mId:'',
       selected: [],
@@ -313,22 +335,20 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       itemsPerPage: 5,
        search: '',
         headers: [
-          // {
-          //   text: 'id',
-          //   align: 'start',
-          //   sortable: false,
-          //   value: 'id',
-          // },
-          
-           { text: 'Actions', value: 'actions1', sortable: false },
+          {
+            text: 'id',
+            align: 'start',
+            // sortable: false,
+            value: 'id',
+          },
           {
             text: 'Name',
-            sortable: false,
+            // sortable: false,
             value: 'name',
           },
           // { text: 'Role', value: 'role' },
-          { text: 'Value', value: 'value' },
-          { text: 'Status ', value: 'status' },
+          { text: 'Email', value: 'email' },
+          { text: 'Code ', value: 'code' },
           // { text: 'admission ', value: 'admission' },
            { text: 'Actions', value: 'actions', sortable: false },
           // { text: 'Iron (%)', value: 'iron' },
@@ -346,11 +366,7 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       dialogDelete: false,
       // desserts: [],
       editedIndex: -1,
-      addedItem: {
-        name: '',
-        value: 0,
-      },
-       editedItem: {
+      editedItem: {
         name: '',
         calories: 0,
         fat: 0,
@@ -385,54 +401,80 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       // this.initialize()
     },
     methods:{
-      
-        cleare_user(){
-        this.switch2="processing..."
-        this.loading = true;
-        const context=this;
-          const mData={
-          sid:this.$store.state.id,
-          switch:this.switch1
+      fChange(){
+        // console.log(this.fStudents)
+        if(this.fStudents=="a"){
+        this.All()
+        this.fts="All"
+        }else if(this.fStudents=="b"){
+          this.init()
+          this.fts="Admitted";
+          // alert("b")
+        }else if(this.fStudents=="c"){
+          this.Finance()
+          this.fts="Finance";
         }
-        api.post("lswitch",mData).then((response) => {
-        console.log("switch response: "+ JSON.stringify(response.data));
-            if(response.data.val==2){ 
-              console.log(response.data.switch)
+      },
+       All(){
+      this.loading = true
+      api.get('finance_all').then((response) => {
+        // console.log("mdata: "+ JSON.stringify(response.data.data));
             
-              this.switch2="not cleared"
-              if(response.data.switch[0].lib==true){
-                this.switch2="cleared"
-              }
-              
+            if(response.data.val==2){ 
+              this.mdata = response.data.data;
             }
             this.loading = false
+    
   }).catch(function (response) {
             //handle error
-            context.switch1=false
-            context.switch2="Not cleared"
             console.log("error"+JSON.stringify(response))
-            context.loading = false
+            
+            this.loading = false
         });
-      },
+    },
+    Finance(){
+      this.loading = true
+      api.get('finance_f').then((response) => {
+        // console.log("mdata: "+ JSON.stringify(response.data.data));
+            let mData1=[];
+            let fid=0;
+            if(response.data.val==2){ 
+              // mData1 = [...new Set(response.data.data)];
+              response.data.data.forEach((item)=>{
+                if(item.id!=fid){
+                  mData1.push(item)
+                  fid=item.id;
+                }
+              });
+              this.mdata = mData1;
+            }
+            this.loading = false
+    
+  }).catch(function (response) {
+            //handle error
+            console.log("error"+JSON.stringify(response))
+            
+            this.loading = false
+        });
+    },
       sClose(){
         this.sItem=false;
       },
           validate () {
         this.$refs.form.validate()
-const mData={
+const nUser={
   id:this.mId,
-  sid:this.$store.state.id,
   name:this.name,
-  value:this.value,
-  status:this.status,
+  code:this.code,
+  email:this.email,
+  admission:this.admission
 }
 this.loading = true;
-        api.post('lib_u',mData).then((response) => {
+        api.post('hod_u1',nUser).then((response) => {
         console.log("update response: "+ JSON.stringify(response));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
-              this.sItem = false
             }
             this.loading = false
     
@@ -477,37 +519,19 @@ this.loading = true;
     
       },
       handleClick(row) {
-      console.log(row.fat)
-    },
-    fBack(){
-       this.$router.push('/lib');
+        this.$router.push('/financef');
+        this.$store.commit('setId',row.id)
+      // console.log(row.id)
     },
       init(){
-        if(this.$store.state.id==''){
-           this.$router.push('/lib');
-        }
-        const mdata={
-          id:this.$store.state.id,
-        }
       this.loading = true
-      api.post('lib_d',mdata).then((response) => {
-        console.log("lib data: "+ JSON.stringify(response.data));
-   
+      api.get('finance').then((response) => {
+        // console.log("mdata: "+ JSON.stringify(response.data.data));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
-              this.fname= response.data.user[0].name;
-              this.fcode= response.data.user[0].name;
-              this.femail= response.data.user[0].email;
-
-              this.switch2="not cleared"
-              if(response.data.user[0].lib==true){
-                this.switch1=true;
-                this.switch2="cleared"
-              }
             }
             this.loading = false
-            
     
   }).catch(function (response) {
             //handle error
@@ -522,8 +546,9 @@ this.loading = true;
         // this.editedItem = Object.assign({}, item)
         this.mId=item.id;
         this.name=item.name;
-        this.status=item.status;
-        this.value=item.value;
+        this.email=item.email;
+        this.code=item.code;
+        this.admission=item.admission;
         // this.eItem.push({name:item.name});
         // this.eItem.push({email:item.email});
         console.log(this.eItem)
@@ -533,11 +558,7 @@ this.loading = true;
       deleteItem (item) {
         console.log(item.id)
            this.loading = true
-           const mData={
-            id:item.id,
-            sid:this.$store.state.id,
-           }
-      api.post('lib_del',mData).then((response) => {
+      api.delete('hod/'+item.id).then((response) => {
         console.log("mdata: "+ JSON.stringify(response.data.data));
             
             if(response.data.val==2){ 
@@ -563,10 +584,10 @@ this.loading = true;
 
       close () {
         this.dialog = false
-        // this.$nextTick(() => {
-        //   this.editedItem = Object.assign({}, this.defaultItem)
-        //   this.editedIndex = -1
-        // })
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        })
       },
 
       closeDelete () {
@@ -578,34 +599,12 @@ this.loading = true;
       },
 
       save () {
-        // if (this.editedIndex > -1) {
-        //   Object.assign(this.mdata[this.editedIndex], this.editedItem)
-        // } else {
-        //   this.mdata.push(this.editedItem)
-        // }
-        this.close()
-        this.loading = true;
-        const mData={
-          sid:this.$store.state.id,
-          name:this.addedItem.name,
-          value:this.addedItem.value
+        if (this.editedIndex > -1) {
+          Object.assign(this.mdata[this.editedIndex], this.editedItem)
+        } else {
+          this.mdata.push(this.editedItem)
         }
-        api.post('lib',mData).then((response) => {
-        console.log("update response: "+ JSON.stringify(response));
-            
-            if(response.data.val==2){ 
-              this.mdata = response.data.data;
-            }
-            this.loading = false
-    
-  }).catch(function (response) {
-            //handle error
-            console.log("error"+JSON.stringify(response))
-            
-            this.loading = false
-        });
-      
-        // console.log(this.addedItem)
+        this.close()
       },
     },
      mounted() {

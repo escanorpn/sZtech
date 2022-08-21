@@ -43,7 +43,7 @@ class student extends Controller
     {
         $item = DB::table('libs')
         ->where('sid', '=', $request->id)
-        ->select( 'name', 'value','id','sid')
+        ->select( 'name', 'value','status','id','sid')
         ->get();
         return response()->json([
         "success" => true,

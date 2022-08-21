@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\gown;
+use App\Models\user;
 use Illuminate\Http\Request;
 use DB;
 
@@ -18,27 +19,44 @@ class GownController extends Controller
         $s="student";
         $users = DB::table('users')
         ->where('role', '=', $s)
-        ->select( 'id','email','code','number')
+        ->select( 'id','email','code','name')
         ->get();
         return response()->json([
         "success" => true,
         "message" => "Item List",
         "val" => "2",
-        "user" => $users,
+        "data" => $users,
+        ]);
+    }
+    public function all()
+    {
+        
+        $s="student";
+        $users = DB::table('users')
+        ->where('role', '=', $s )
+        // ->where('admission', 'admitted') 
+        ->select( 'id','name','email','code','number')
+        ->get();
+        return response()->json([
+        "success" => true,
+        "message" => "Item List",
+        "val" => "2",
+        "data" => $users,
+        // "data" => $item,
         ]);
     }
     public function StudentGowns()
     {
         $users = DB::table('users')
             ->join('gowns', 'users.id', '=', 'gowns.sid')
-            ->select('users.id','users.email', 'users.code','users.number',  'gowns.status','gowns.name',)
+            ->select('users.id','users.email', 'users.code','users.name',  'gowns.created_at','gowns.name',)
             ->distinct()->get();
      
         return response()->json([
         "success" => true,
         "message" => "Item List",
         "val" => "2",
-        "user" => $users,
+        "data" => $users,
         // "data" => $item,
         ]);
     }
@@ -47,7 +65,7 @@ class GownController extends Controller
      
         $item = DB::table('gowns')
         ->where('sid', '=', $request->id)
-        ->select( 'name', 'status','id','sid')
+        ->select( 'name', 'status','id','sid','created_at')
         ->get();
         
         $user = DB::table('users')
@@ -72,19 +90,36 @@ class GownController extends Controller
         public function create(Request $request)
         {
             $response = [];
+            $item1="";
+            $val=2;
             $uid=$request->uid;
     
             $item = new Gown;
             $item->sid = $request->sid;
             $item->name =$request->name;
-            // $item->value = $request->value;
-            $item->save();
+            
+            $issue = DB::table('gowns')
+            ->where('sid', '=', $request->sid)
+            ->where('name', '=',$request->name)
+            ->count();
+            if($issue>0){
+                $val=22;
+             
+            }else{
+                $item->save();
+                $item1 = DB::table('gowns')
+                ->where('sid', '=', $request->sid)
+                ->select( 'name', 'status','id','sid','created_at')
+                ->get();
+            }
+
+            
     
             return response()->json([
                     "success" => true,
-                    "val" => "2",
-                    "message" => "Financial record successfully uploaded",
-                    // "file" => $file
+                    "val" =>  $val,
+                    "message" => "Gowns record successfully added",
+                    "data" => $item1
                 ]);
             return response()->json($response);
         }
@@ -143,6 +178,23 @@ class GownController extends Controller
             "affected" => $affected
         ]);
     }
+    public function switch(Request $request)
+    {
+        $response = [];
+        $affected=User::where('id', $request->sid)->update(['gown' => $request->switch]);
+        $gown = DB::table('users')
+        ->where('id', '=', $request->sid)
+        ->select( 'gown')
+        ->get();
+        return response()->json([
+            "success" => true,
+            "val" => "2", 
+            "message" => "Gown successfully updated",
+            "affected" => $affected,
+            "switch" => $gown,
+
+        ]);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -150,8 +202,25 @@ class GownController extends Controller
      * @param  \App\Models\gown  $gown
      * @return \Illuminate\Http\Response
      */
-    public function destroy(gown $gown)
+    public function destroy(Request $request)
     {
-        //
+        $response = [];
+        Gown::destroy($request->id);
+
+        $item1 = DB::table('gowns')
+        ->where('sid', '=', $request->sid)
+        ->select( 'name', 'status','id','sid','created_at')
+        ->get();
+
+    
+
+        return response()->json([
+            "success" => true,
+            "val" => "2",
+            "message" => "FInance successfully updated",
+            // "affected" => $affected,
+            "data" => $item1,
+            
+        ]);
     }
 }

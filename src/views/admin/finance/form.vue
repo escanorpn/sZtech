@@ -35,11 +35,17 @@
             
 
   <v-card style="margin-top:-122px">
-  
+
     <v-card-title>
       <mdb-btn style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;" color="" type="submit" 
        @click="fBack"
       >All students</mdb-btn>
+      <v-spacer></v-spacer>
+       <p>Payed:{{fPayed}}</p>
+      <v-spacer></v-spacer>
+       <p>Pending:{{fPending}}</p>
+      <v-spacer></v-spacer>
+       <p>Balance:{{fBalance}}</p>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -69,7 +75,7 @@
       <v-toolbar
         flat
       >
-       <v-switch
+        <v-switch
       v-model="switch1"
       :label="switch2"
        @change="cleare_user"
@@ -94,7 +100,7 @@
               v-on="on"
               style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;"
             >
-              Add
+              Add 
             </v-btn>
             
           </template>
@@ -116,6 +122,7 @@
                       label="name"
                     ></v-text-field>
                   </v-col>
+                    
                   <v-col
                     cols="12"
                     sm="6"
@@ -125,6 +132,16 @@
                       v-model="addedItem.value"
                       label="Value"
                     ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <a-radio-group v-model="fStudents" @change="fChange" size="small">
+                    <a-radio-button checked="fchecked" value="a">Debt</a-radio-button>
+                    <a-radio-button value="b">Payment</a-radio-button>
+                  </a-radio-group>
                   </v-col>
             
                 </v-row>
@@ -279,8 +296,14 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
      },
      
     data: () => ({
+      
       switch1:false,
       switch2:"Not cleared",
+      fPending:0,
+      fPayed:0,
+      fBalance:0,
+      fStudents:"a",
+      fchecked:true,
       fname:"",
       fcode:"",
       femail:"",
@@ -296,7 +319,7 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       status: null,
       items: [
         'pending',
-        'cleared',
+        'payed',
       ],
       mId:'',
       selected: [],
@@ -385,7 +408,6 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       // this.initialize()
     },
     methods:{
-      
         cleare_user(){
         this.switch2="processing..."
         this.loading = true;
@@ -394,13 +416,13 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
           sid:this.$store.state.id,
           switch:this.switch1
         }
-        api.post("lswitch",mData).then((response) => {
+        api.post("fswitch",mData).then((response) => {
         console.log("switch response: "+ JSON.stringify(response.data));
             if(response.data.val==2){ 
               console.log(response.data.switch)
             
               this.switch2="not cleared"
-              if(response.data.switch[0].lib==true){
+              if(response.data.switch[0].finance==true){
                 this.switch2="cleared"
               }
               
@@ -427,7 +449,11 @@ const mData={
   status:this.status,
 }
 this.loading = true;
-        api.post('lib_u',mData).then((response) => {
+let mgo="finance_u"
+// alert("fStudents: "+this.fStudents)
+// return;
+
+        api.post(mgo,mData).then((response) => {
         console.log("update response: "+ JSON.stringify(response));
             
             if(response.data.val==2){ 
@@ -480,18 +506,18 @@ this.loading = true;
       console.log(row.fat)
     },
     fBack(){
-       this.$router.push('/lib');
+       this.$router.push('/finance');
     },
       init(){
         if(this.$store.state.id==''){
-           this.$router.push('/lib');
+           this.$router.push('/finance');
         }
         const mdata={
           id:this.$store.state.id,
         }
       this.loading = true
-      api.post('lib_d',mdata).then((response) => {
-        console.log("lib data: "+ JSON.stringify(response.data));
+      api.post('finance_d',mdata).then((response) => {
+        console.log("finance data: "+ JSON.stringify(response.data));
    
             
             if(response.data.val==2){ 
@@ -499,12 +525,16 @@ this.loading = true;
               this.fname= response.data.user[0].name;
               this.fcode= response.data.user[0].name;
               this.femail= response.data.user[0].email;
+              this.fPending=response.data.pending;
+              this.fPayed=response.data.payed;
+              this.fBalance= parseInt(this.fPending)-parseInt(this.fPayed);
 
-              this.switch2="not cleared"
-              if(response.data.user[0].lib==true){
+               this.switch2="not cleared"
+              if(response.data.user[0].finance==true){
                 this.switch1=true;
                 this.switch2="cleared"
               }
+              // this.fBalance= parseInt(this.fPending)-parseInt(this.fpayed);
             }
             this.loading = false
             
@@ -537,11 +567,14 @@ this.loading = true;
             id:item.id,
             sid:this.$store.state.id,
            }
-      api.post('lib_del',mData).then((response) => {
-        console.log("mdata: "+ JSON.stringify(response.data.data));
+      api.post('finance_del',mData).then((response) => {
+        console.log("mdata: "+ JSON.stringify(response.data));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
+              this.fPending=response.data.pending;
+              this.fPayed=response.data.payed;
+              this.fBalance= parseInt(this.fPending)-parseInt(this.fPayed);
             }
             this.loading = false
     
@@ -590,11 +623,18 @@ this.loading = true;
           name:this.addedItem.name,
           value:this.addedItem.value
         }
-        api.post('lib',mData).then((response) => {
+        let mgo="finance_u"
+        if(this.fStudents=="b"){
+          mgo="payment"
+        }
+        api.post(mgo,mData).then((response) => {
         console.log("update response: "+ JSON.stringify(response));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
+               this.fPending=response.data.pending;
+              this.fPayed=response.data.payed;
+              this.fBalance= parseInt(this.fPending)-parseInt(this.fPayed);
             }
             this.loading = false
     

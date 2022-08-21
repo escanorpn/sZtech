@@ -1,12 +1,13 @@
 
 <template>
   <v-app id="inspire">
-    <v-app-bar
+      <v-app-bar
       app
-      color="white"
+      
+      color="#3c0d0b"
       flat
     >
-     
+       <h4 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;text-shadow: #cb6dff 1px 1px 2px;margin-top: 5px;margin-left: auto;margin-right: auto;" >Library</h4>
     </v-app-bar>
 
     <v-main class="grey lighten-3">
@@ -23,7 +24,7 @@
 
   <v-card>
     <v-card-title>
-      Admitted students
+      {{fts}} students
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -34,8 +35,7 @@
       ></v-text-field>
     </v-card-title>
     <v-data-table
-    v-model="selected"
-    show-select
+   
       :headers="headers"
       :items="mdata"
       :search="search"
@@ -72,7 +72,7 @@
           max-width="500px"
         >
           <template v-slot:activator="{  attrs }">
-            <v-btn
+            <!-- <v-btn
               color="primary"
               dark
               class="mb-2"
@@ -81,7 +81,7 @@
               @click="admit"
             >
               Admit selected
-            </v-btn>
+            </v-btn> -->
           </template>
           <v-card>
             <v-card-title>
@@ -295,6 +295,7 @@
      },
      
     data: () => ({
+      fts:"All",
       fStudents:"a",
       fchecked:true,
       loading1:true,
@@ -337,12 +338,12 @@
           {
             text: 'id',
             align: 'start',
-            sortable: false,
+            // sortable: false,
             value: 'id',
           },
           {
             text: 'Name',
-            sortable: false,
+            // sortable: false,
             value: 'name',
           },
           // { text: 'Role', value: 'role' },
@@ -401,8 +402,61 @@
     },
     methods:{
       fChange(){
-        alert(this.fStudents)
+        // console.log(this.fStudents)
+        if(this.fStudents=="a"){
+        this.All()
+        this.fts="All"
+        }else if(this.fStudents=="b"){
+          this.init()
+          this.fts="Admitted";
+          // alert("b")
+        }else if(this.fStudents=="c"){
+          this.Library()
+          this.fts="Library";
+        }
       },
+       All(){
+      this.loading = true
+      api.get('lib_all').then((response) => {
+        // console.log("mdata: "+ JSON.stringify(response.data.data));
+            
+            if(response.data.val==2){ 
+              this.mdata = response.data.data;
+            }
+            this.loading = false
+    
+  }).catch(function (response) {
+            //handle error
+            console.log("error"+JSON.stringify(response))
+            
+            this.loading = false
+        });
+    },
+    Library(){
+      this.loading = true
+      api.get('lib_a').then((response) => {
+        // console.log("mdata: "+ JSON.stringify(response.data.data));
+          let mData1=[];
+            let fid=0;
+            if(response.data.val==2){ 
+              // mData1 = [...new Set(response.data.data)];
+              response.data.data.forEach((item)=>{
+                if(item.id!=fid){
+                  mData1.push(item)
+                  fid=item.id;
+                }
+              });
+              this.mdata = mData1;
+            }
+            this.loading = false
+    
+  }).catch(function (response) {
+            //handle error
+            console.log("error"+JSON.stringify(response))
+            
+            this.loading = false
+        });
+    },
       sClose(){
         this.sItem=false;
       },

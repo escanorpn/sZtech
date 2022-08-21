@@ -43,14 +43,33 @@ class LibController extends Controller
         // "data" => $item,
         ]);
     }
+    public function all()
+    {
+        
+        $s="student";
+        $users = DB::table('users')
+        ->where('role', '=', $s )
+        // ->where('admission', 'admitted') 
+        ->select( 'id','name','email','code','number')
+        ->get();
+        return response()->json([
+        "success" => true,
+        "message" => "Item List",
+        "val" => "2",
+        "data" => $users,
+        // "data" => $item,
+        ]);
+    }
     public function StudentArears()
     {
         $users = DB::table('users')
-            ->join('libs', 'users.id', '=', 'libs.sid')
-            // ->join('orders', 'users.id', '=', 'orders.user_id')
+        ->join('libs', 'libs.sid', '=', 'users.id')
+        // ->join('libs', 'users.id', '=', 'libs.sid')
+            // ->where('role', '=', "student")
+            // ->join('users', 'users.role', '=', 'student')
             
-            // ->select('users.email', 'users.code','users.number', 'libs.status','libs.name', 'libs.id')
-            ->select('users.id','users.email', 'users.code','users.number',  'libs.status','libs.name',)
+            // ->select('users.email', 'users.code','users.number', 'libs.status','libs.name', 'libs.sid')
+            ->select('users.id','users.email', 'users.code','users.role','users.name',  'libs.sid','libs.status',)
             ->distinct()->get();
         // $item = DB::table('libs')
         // ->where('sid', '=', 1)
@@ -60,7 +79,7 @@ class LibController extends Controller
         "success" => true,
         "message" => "Item List",
         "val" => "2",
-        "user" => $users,
+        "data" => $users,
         // "data" => $item,
         ]);
     }
@@ -170,7 +189,23 @@ class LibController extends Controller
     {
         //
     }
+    public function switch(Request $request)
+    {
+        $response = [];
+        $affected=User::where('id', $request->sid)->update(['lib' => $request->switch]);
+        $lib = DB::table('users')
+        ->where('id', '=', $request->sid)
+        ->select( 'lib')
+        ->get();
+        return response()->json([
+            "success" => true,
+            "val" => "2", 
+            "message" => "Gown successfully updated",
+            "affected" => $affected,
+            "switch" => $lib,
 
+        ]);
+    }
     /**
      * Update the specified resource in storage.
      *

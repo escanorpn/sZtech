@@ -35,7 +35,7 @@
             
 
   <v-card style="margin-top:-122px">
-  
+
     <v-card-title>
       <mdb-btn style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;" color="" type="submit" 
        @click="fBack"
@@ -69,7 +69,7 @@
       <v-toolbar
         flat
       >
-       <v-switch
+      <v-switch
       v-model="switch1"
       :label="switch2"
        @change="cleare_user"
@@ -94,7 +94,7 @@
               v-on="on"
               style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;"
             >
-              Add
+              Add 
             </v-btn>
             
           </template>
@@ -111,20 +111,13 @@
                     sm="6"
                     md="4"
                   >
-                    <v-text-field
-                      v-model="addedItem.name"
-                      label="name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="addedItem.value"
-                      label="Value"
-                    ></v-text-field>
+                  <v-select
+                    v-model="gowns"
+                    :items="gownsd"
+                    :rules="[v => !!v || 'status is required']"
+                    label="Select"
+                    required
+                  ></v-select>
                   </v-col>
             
                 </v-row>
@@ -163,7 +156,7 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.actions1="{ item }">
+    <!-- <template v-slot:item.actions1="{ item }">
       <v-icon
         small
         class="mr-2"
@@ -172,7 +165,7 @@
         mdi-pencil
       </v-icon>
      
-    </template>
+    </template> -->
     <template v-slot:item.actions="{ item }">
     
       <v-icon
@@ -281,6 +274,14 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
     data: () => ({
       switch1:false,
       switch2:"Not cleared",
+      gowns:"",
+      gownsd:[
+        'issued',
+        'returned'
+      ],
+      
+      fStudents:"a",
+      fchecked:true,
       fname:"",
       fcode:"",
       femail:"",
@@ -296,7 +297,7 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       status: null,
       items: [
         'pending',
-        'cleared',
+        'payed',
       ],
       mId:'',
       selected: [],
@@ -313,22 +314,15 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       itemsPerPage: 5,
        search: '',
         headers: [
-          // {
-          //   text: 'id',
-          //   align: 'start',
-          //   sortable: false,
-          //   value: 'id',
-          // },
-          
-           { text: 'Actions', value: 'actions1', sortable: false },
+         
           {
             text: 'Name',
             sortable: false,
             value: 'name',
           },
-          // { text: 'Role', value: 'role' },
-          { text: 'Value', value: 'value' },
-          { text: 'Status ', value: 'status' },
+          { text: 'Date time', value: 'created_at' },
+          // { text: 'Value', value: 'value' },
+          // { text: 'Status ', value: 'status' },
           // { text: 'admission ', value: 'admission' },
            { text: 'Actions', value: 'actions', sortable: false },
           // { text: 'Iron (%)', value: 'iron' },
@@ -385,8 +379,7 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       // this.initialize()
     },
     methods:{
-      
-        cleare_user(){
+      cleare_user(){
         this.switch2="processing..."
         this.loading = true;
         const context=this;
@@ -394,13 +387,13 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
           sid:this.$store.state.id,
           switch:this.switch1
         }
-        api.post("lswitch",mData).then((response) => {
+        api.post("switch",mData).then((response) => {
         console.log("switch response: "+ JSON.stringify(response.data));
             if(response.data.val==2){ 
               console.log(response.data.switch)
             
               this.switch2="not cleared"
-              if(response.data.switch[0].lib==true){
+              if(response.data.switch[0].gown==1){
                 this.switch2="cleared"
               }
               
@@ -417,19 +410,22 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       sClose(){
         this.sItem=false;
       },
-          validate () {
+      validate () {
         this.$refs.form.validate()
-const mData={
-  id:this.mId,
-  sid:this.$store.state.id,
-  name:this.name,
-  value:this.value,
-  status:this.status,
-}
-this.loading = true;
-        api.post('lib_u',mData).then((response) => {
+        const mData={
+          id:this.mId,
+          sid:this.$store.state.id,
+          name:this.name,
+          value:this.value,
+          status:this.status,
+        }
+        this.loading = true;
+        let mgo="gown_u"
+        // alert("fStudents: "+this.fStudents)
+        // return;
+
+        api.post(mgo,mData).then((response) => {
         console.log("update response: "+ JSON.stringify(response));
-            
             if(response.data.val==2){ 
               this.mdata = response.data.data;
               this.sItem = false
@@ -480,18 +476,18 @@ this.loading = true;
       console.log(row.fat)
     },
     fBack(){
-       this.$router.push('/lib');
+       this.$router.push('/gown');
     },
       init(){
         if(this.$store.state.id==''){
-           this.$router.push('/lib');
+           this.$router.push('/gown');
         }
         const mdata={
           id:this.$store.state.id,
         }
       this.loading = true
-      api.post('lib_d',mdata).then((response) => {
-        console.log("lib data: "+ JSON.stringify(response.data));
+      api.post('gown_d',mdata).then((response) => {
+        console.log("gown data: "+ JSON.stringify(response.data));
    
             
             if(response.data.val==2){ 
@@ -501,7 +497,7 @@ this.loading = true;
               this.femail= response.data.user[0].email;
 
               this.switch2="not cleared"
-              if(response.data.user[0].lib==true){
+              if(response.data.user[0].gown==1){
                 this.switch1=true;
                 this.switch2="cleared"
               }
@@ -537,8 +533,8 @@ this.loading = true;
             id:item.id,
             sid:this.$store.state.id,
            }
-      api.post('lib_del',mData).then((response) => {
-        console.log("mdata: "+ JSON.stringify(response.data.data));
+      api.post('gown_del',mData).then((response) => {
+        console.log("mdata: "+ JSON.stringify(response.data));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
@@ -584,17 +580,23 @@ this.loading = true;
         //   this.mdata.push(this.editedItem)
         // }
         this.close()
+        if(this.gowns==''){
+          return
+        }
         this.loading = true;
         const mData={
           sid:this.$store.state.id,
-          name:this.addedItem.name,
-          value:this.addedItem.value
+          name:this.gowns,
+          // value:this.addedItem.value
         }
-        api.post('lib',mData).then((response) => {
+        let mgo="gown"
+        api.post(mgo,mData).then((response) => {
         console.log("update response: "+ JSON.stringify(response));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
+            }else if(response.data.val==22){ 
+              alert("Gown already "+this.gowns)
             }
             this.loading = false
     

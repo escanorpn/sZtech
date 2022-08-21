@@ -1,29 +1,8 @@
 
 <template>
   <v-app id="inspire">
-    <v-app-bar
-      app
-      
-      color="#3c0d0b"
-      flat
-    >
-       <h4 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;text-shadow: #cb6dff 1px 1px 2px;margin-top: 5px;margin-left: auto;margin-right: auto;" >{{fname}}</h4>
-    </v-app-bar>
- <mdb-edge-header color="" style="background-color: #3c0d0b;margin-top:-12px;">
-        <div class="home-page-background"></div>
-           <div class="container">
-              <div class="loading-box" v-if="loading">
-                <div class="loader"></div>
-              </div>
-        <div class="row">
-          <div class="col-lg-8 text-center mx-auto" style="margin-top:87px;position: fixed;left: 0;width:100%;">
-          <h5 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;" >code: {{fcode}}</h5>
-          <h5 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;"  >email: {{femail}}</h5>
-        </div>
-        </div>
-           </div>
-         
-      </mdb-edge-header>
+
+
     <v-main class="grey lighten-3">
       <v-container>
      
@@ -34,13 +13,8 @@
 
             
 
-  <v-card style="margin-top:-122px">
-  
-    <v-card-title>
-      <mdb-btn style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;" color="" type="submit" 
-       @click="fBack"
-      >All students</mdb-btn>
-      <v-spacer></v-spacer>
+  <v-card style="margin-top:-72px">
+   <v-card-title>
       <v-text-field
         v-model="search"
         append-icon="mdi-magnify"
@@ -49,6 +23,7 @@
         hide-details
       ></v-text-field>
     </v-card-title>
+    
     <v-data-table
   
       :headers="headers"
@@ -63,133 +38,8 @@
       class="selected"
       @page-count="pageCount = $event"
       @click:row="handleClick"
-
     >
-     <template v-slot:top>
-      <v-toolbar
-        flat
-      >
-       <v-switch
-      v-model="switch1"
-      :label="switch2"
-       @change="cleare_user"
-    ></v-switch>
-        <!-- <v-toolbar-title>My CRUD</v-toolbar-title> -->
-        <v-divider
-          class="mx-4"
-          inset
-          vertical
-        ></v-divider>
-        <v-spacer></v-spacer>
-        <v-dialog
-          v-model="dialog"
-          max-width="500px"
-        >
-          <template v-slot:activator="{  on, attrs }">
-            <v-btn
-              color="primary"
-              dark
-              class="mb-2"
-               v-bind="attrs"
-              v-on="on"
-              style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;"
-            >
-              Add
-            </v-btn>
-            
-          </template>
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="addedItem.name"
-                      label="name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="addedItem.value"
-                      label="Value"
-                    ></v-text-field>
-                  </v-col>
-            
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="close"
-              >
-                Cancel
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="save"
-              >
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-toolbar>
-    </template>
-    <template v-slot:item.actions1="{ item }">
-      <v-icon
-        small
-        class="mr-2"
-        @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
-     
-    </template>
-    <template v-slot:item.actions="{ item }">
     
-      <v-icon
-        small
-        @click="deleteItem(item)"
-      >
-        mdi-delete
-      </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="init"
-      >
-        Reset
-      </v-btn>
-    </template>
     </v-data-table>
     <div class="text-center pt-2">
       <v-pagination
@@ -271,16 +121,24 @@
 <script>
   // import mForm from "./form.vue"
   import api from "../../services/api";
-import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
+// import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
   export default {
      components: {
-      mdbEdgeHeader,
-      mdbBtn
+      // mdbEdgeHeader,
+      // mdbBtn
      },
      
     data: () => ({
       switch1:false,
       switch2:"Not cleared",
+      gowns:"",
+      gownsd:[
+        'issued',
+        'returned'
+      ],
+      
+      fStudents:"a",
+      fchecked:true,
       fname:"",
       fcode:"",
       femail:"",
@@ -296,7 +154,7 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       status: null,
       items: [
         'pending',
-        'cleared',
+        'payed',
       ],
       mId:'',
       selected: [],
@@ -313,25 +171,14 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       itemsPerPage: 5,
        search: '',
         headers: [
-          // {
-          //   text: 'id',
-          //   align: 'start',
-          //   sortable: false,
-          //   value: 'id',
-          // },
-          
-           { text: 'Actions', value: 'actions1', sortable: false },
+         
           {
             text: 'Name',
             sortable: false,
             value: 'name',
           },
-          // { text: 'Role', value: 'role' },
-          { text: 'Value', value: 'value' },
-          { text: 'Status ', value: 'status' },
-          // { text: 'admission ', value: 'admission' },
-           { text: 'Actions', value: 'actions', sortable: false },
-          // { text: 'Iron (%)', value: 'iron' },
+          { text: 'Date time', value: 'created_at' },
+          
         ],
         mdata: [
           {
@@ -385,8 +232,7 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       // this.initialize()
     },
     methods:{
-      
-        cleare_user(){
+      cleare_user(){
         this.switch2="processing..."
         this.loading = true;
         const context=this;
@@ -394,13 +240,13 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
           sid:this.$store.state.id,
           switch:this.switch1
         }
-        api.post("lswitch",mData).then((response) => {
+        api.post("switch",mData).then((response) => {
         console.log("switch response: "+ JSON.stringify(response.data));
             if(response.data.val==2){ 
               console.log(response.data.switch)
             
               this.switch2="not cleared"
-              if(response.data.switch[0].lib==true){
+              if(response.data.switch[0].gown==1){
                 this.switch2="cleared"
               }
               
@@ -417,19 +263,22 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       sClose(){
         this.sItem=false;
       },
-          validate () {
+      validate () {
         this.$refs.form.validate()
-const mData={
-  id:this.mId,
-  sid:this.$store.state.id,
-  name:this.name,
-  value:this.value,
-  status:this.status,
-}
-this.loading = true;
-        api.post('lib_u',mData).then((response) => {
+        const mData={
+          id:this.mId,
+          sid:this.$store.state.id,
+          name:this.name,
+          value:this.value,
+          status:this.status,
+        }
+        this.loading = true;
+        let mgo="gown_u"
+        // alert("fStudents: "+this.fStudents)
+        // return;
+
+        api.post(mgo,mData).then((response) => {
         console.log("update response: "+ JSON.stringify(response));
-            
             if(response.data.val==2){ 
               this.mdata = response.data.data;
               this.sItem = false
@@ -480,18 +329,18 @@ this.loading = true;
       console.log(row.fat)
     },
     fBack(){
-       this.$router.push('/lib');
+      //  this.$router.push('/gown');
     },
       init(){
         if(this.$store.state.id==''){
-           this.$router.push('/lib');
+          //  this.$router.push('/gown');
         }
         const mdata={
           id:this.$store.state.id,
         }
       this.loading = true
-      api.post('lib_d',mdata).then((response) => {
-        console.log("lib data: "+ JSON.stringify(response.data));
+      api.post('gown_d',mdata).then((response) => {
+        console.log("gown data: "+ JSON.stringify(response.data));
    
             
             if(response.data.val==2){ 
@@ -501,7 +350,7 @@ this.loading = true;
               this.femail= response.data.user[0].email;
 
               this.switch2="not cleared"
-              if(response.data.user[0].lib==true){
+              if(response.data.user[0].gown==1){
                 this.switch1=true;
                 this.switch2="cleared"
               }
@@ -537,8 +386,8 @@ this.loading = true;
             id:item.id,
             sid:this.$store.state.id,
            }
-      api.post('lib_del',mData).then((response) => {
-        console.log("mdata: "+ JSON.stringify(response.data.data));
+      api.post('gown_del',mData).then((response) => {
+        console.log("mdata: "+ JSON.stringify(response.data));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
@@ -584,17 +433,23 @@ this.loading = true;
         //   this.mdata.push(this.editedItem)
         // }
         this.close()
+        if(this.gowns==''){
+          return
+        }
         this.loading = true;
         const mData={
           sid:this.$store.state.id,
-          name:this.addedItem.name,
-          value:this.addedItem.value
+          name:this.gowns,
+          // value:this.addedItem.value
         }
-        api.post('lib',mData).then((response) => {
+        let mgo="gown"
+        api.post(mgo,mData).then((response) => {
         console.log("update response: "+ JSON.stringify(response));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
+            }else if(response.data.val==22){ 
+              alert("Gown already "+this.gowns)
             }
             this.loading = false
     

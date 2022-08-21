@@ -9,6 +9,11 @@ import Signup from './views/admin/signup.vue'
 import Hod from './views/admin/hod/hod.vue'
 import Lib from './views/admin/lib/main.vue'
 import Libf from './views/admin/lib/form.vue'
+import Finance from './views/admin/finance/main.vue'
+import Financef from './views/admin/finance/form.vue'
+import Gown from './views/admin/gown/main.vue'
+import Gownf from './views/admin/gown/form.vue'
+import Student from './views/admin/student/main.vue'
 import Products from './views/admin/products.vue'
 
 
@@ -68,6 +73,36 @@ export default new Router({
       path: '/libf',
       name: 'Libf',
       component: Libf,
+      beforeEnter:isLoggedIn
+    },
+    {
+      path: '/finance',
+      name: 'Finance',
+      component: Finance,
+      beforeEnter:isLoggedIn
+    },
+    {
+      path: '/financef',
+      name: 'Financef',
+      component: Financef,
+      beforeEnter:isLoggedIn
+    },
+    {
+      path: '/gown',
+      name: 'Gown',
+      component: Gown,
+      beforeEnter:isLoggedIn
+    },
+    {
+      path: '/gownf',
+      name: 'Gownf',
+      component: Gownf,
+      beforeEnter:isLoggedIn
+    },
+    {
+      path: '/student',
+      name: 'Student',
+      component: Student,
       beforeEnter:isLoggedIn
     },
     
