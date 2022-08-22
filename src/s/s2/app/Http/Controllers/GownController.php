@@ -19,7 +19,8 @@ class GownController extends Controller
         $s="student";
         $users = DB::table('users')
         ->where('role', '=', $s)
-        ->select( 'id','email','code','name')
+        ->where('admission', 'admitted') 
+        // ->select( 'id','email','code','name')
         ->get();
         return response()->json([
         "success" => true,
@@ -35,7 +36,7 @@ class GownController extends Controller
         $users = DB::table('users')
         ->where('role', '=', $s )
         // ->where('admission', 'admitted') 
-        ->select( 'id','name','email','code','number')
+        // ->select( 'id','name','email','code','number')
         ->get();
         return response()->json([
         "success" => true,
@@ -49,7 +50,7 @@ class GownController extends Controller
     {
         $users = DB::table('users')
             ->join('gowns', 'users.id', '=', 'gowns.sid')
-            ->select('users.id','users.email', 'users.code','users.name',  'gowns.created_at','gowns.name',)
+            ->select('users.id','users.email', 'users.code','users.name','users.gowns',  'gowns.created_at',)
             ->distinct()->get();
      
         return response()->json([
@@ -102,6 +103,7 @@ class GownController extends Controller
             ->where('sid', '=', $request->sid)
             ->where('name', '=',$request->name)
             ->count();
+            User::where('id', $request->sid)->update(['gowns' => $request->name]);
             if($issue>0){
                 $val=22;
              

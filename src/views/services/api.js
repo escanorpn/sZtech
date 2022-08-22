@@ -39,6 +39,10 @@ const requestHandler = request => {
 };
 
 const responseHandler = response => {
+    if(response.data.val==3){
+        // alert("foo")
+        alert(response.data.msg)
+       }
     if (response.status === 401) {
         router.push('/Admin');
     }else if (response.data.code === 401) {

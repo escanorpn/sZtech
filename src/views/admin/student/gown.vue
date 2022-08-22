@@ -13,7 +13,7 @@
 
             
 
-  <v-card style="margin-top:-72px">
+  <v-card style="margin-top:-12px">
    <v-card-title>
       <v-text-field
         v-model="search"
@@ -142,7 +142,7 @@
       fname:"",
       fcode:"",
       femail:"",
-      loading1:true,
+      loading1:false,
       valid: true,
       name: '',
       nameRules: [
@@ -336,10 +336,11 @@
           //  this.$router.push('/gown');
         }
         const mdata={
-          id:this.$store.state.id,
+          // id:this.$store.state.id,
+         id : localStorage.getItem('user_id')
         }
       this.loading = true
-      api.post('gown_d',mdata).then((response) => {
+      api.post('sgown_d',mdata).then((response) => {
         console.log("gown data: "+ JSON.stringify(response.data));
    
             

@@ -1,22 +1,16 @@
 
 <template>
   <v-app id="inspire">
-    <v-app-bar
-      app
-      
-      color="#3c0d0b"
-      flat
-    >
-       <h4 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;text-shadow: #cb6dff 1px 1px 2px;margin-top: 5px;margin-left: auto;margin-right: auto;" >{{fname}}</h4>
-    </v-app-bar>
+   
  <mdb-edge-header color="" style="background-color: #3c0d0b;margin-top:-12px;">
         <div class="home-page-background"></div>
            <div class="container">
-              <div class="loading-box" v-if="loading">
+              <div class="loading-box" v-if="loading1">
                 <div class="loader"></div>
               </div>
         <div class="row">
           <div class="col-lg-8 text-center mx-auto" style="margin-top:87px;position: fixed;left: 0;width:100%;">
+          <h4 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;text-shadow: #cb6dff 1px 1px 2px;margin-top: 5px;margin-left: auto;margin-right: auto;" >Name: {{fname}}</h4>
           <h5 class="text-white pt-3 mt-n5" style=" font-weight: 800;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;" >code: {{fcode}}</h5>
           <h5 class="text-white pt-3 mt-n5" style=" font-weight: 800;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;"  >email: {{femail}}</h5>
           
@@ -36,7 +30,7 @@
 
             
 
-  <v-card style="margin-top:-122px">
+  <v-card style="margin-top:-22px">
 
     <v-card-title>
       <mdb-btn style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;" color="" type="submit" 
@@ -57,9 +51,7 @@
     </v-card-title>
     
 
-       <div class="loading-box" v-if="loading1">
-                <div class="loader"></div>
-              </div>
+    
       
   </v-card>
   <v-card style="max-width:800px; margin-left:auto;margin-right:auto;margin-top:22px;padding:22px" v-if="sData==true">
@@ -76,32 +68,32 @@
   >
 
     <v-text-field
-      v-model="name"
+      v-model="fname"
       :counter="10"
       :rules="nameRules"
       label="Name"
       required
     ></v-text-field>
 
-    <v-text-field
-      v-model="email"
+    <!-- <v-text-field
+      v-model="femail"
       :rules="emailRules"
       label="Email"
       required
-    ></v-text-field>
+    ></v-text-field> -->
 
 <mdb-btn style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);
 box-shadow: rgb(38 3 3) 1px 5px 5px;" color="" type="submit" 
        @click="validate"
       >update</mdb-btn>
   
- <v-btn
+ <!-- <v-btn
  style="float:right"
       color="warning"
       @click="sClose"
     >
       close
-    </v-btn>
+    </v-btn> -->
 
   </v-form>
    </v-card>
@@ -135,6 +127,7 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
      },
      
     data: () => ({
+      loading1:false,
       fItem:"",
      sData:true,
      lData:false,
@@ -199,7 +192,8 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       this.loading = true
       const context=this;
        const mdata={
-          id:this.$store.state.id,
+          // id:this.$store.state.id,
+          id : localStorage.getItem('user_id')
         }
         api.post('student',mdata).then((response) => {
           // console.log("mdata: "+ JSON.stringify(response.data.data));
@@ -215,6 +209,28 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
                     context.loading = false
           });
         },
+        validate(){
+           this.loading1 = true
+      const context=this;
+       const mdata={
+          id : localStorage.getItem('user_id'),
+          name : this.fname
+        }
+        api.post('student_u',mdata).then((response) => {
+          // console.log("mdata: "+ JSON.stringify(response.data.data));
+          if(response.data.val==2){ 
+            // this.fname = response.data.user[0].name;
+            // this.fcode = response.data.user[0].code;
+            // this.femail = response.data.user[0].email;
+          }
+          this.loading1 = false
+
+          }).catch(function (response) {
+                    console.log("error"+JSON.stringify(response))
+                    context.loading1 = false
+          });
+        
+        }
 
         
     //  lFun(){

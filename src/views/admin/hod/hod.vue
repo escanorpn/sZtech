@@ -1,14 +1,24 @@
 
 <template>
   <v-app id="inspire">
-    <v-app-bar
-      app
-      color="white"
-      flat
-    >
-     
-    </v-app-bar>
 
+ <mdb-edge-header color="" style="background-color: #3c0d0b;margin-top:-12px;">
+        <div class="home-page-background"></div>
+           <div class="container">
+              <!-- <div class="loading-box" v-if="loading1">
+                <div class="loader"></div>
+              </div> -->
+        <div class="row">
+          <div class="col-lg-8 text-center mx-auto" style="margin-top:87px;position: fixed;left: 0;width:100%;">
+          <h5 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;" >Gowns issued: {{issued}}</h5>
+          <h5 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;"  >Gowns returned: {{returned}}</h5>
+          <h5 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;"  >cleared for Graduation: {{cleared}}</h5>
+          <h5 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;margin-top: 5px;margin-left: 44px;margin-right: ;text-align: left;"  >Certs issued: {{cert}}</h5>
+        </div>
+        </div>
+           </div>
+         
+      </mdb-edge-header>
     <v-main class="grey lighten-3">
       <v-container>
         <v-row>
@@ -23,7 +33,7 @@
 
   <v-card>
     <v-card-title>
-      All students
+      {{fts}} students
       <v-spacer></v-spacer>
       <v-text-field
         v-model="search"
@@ -54,7 +64,10 @@
       <v-toolbar
         flat
       >
-        <v-toolbar-title>My CRUD</v-toolbar-title>
+          <a-radio-group v-model="fStudents" @change="fChange" size="small">
+        <a-radio-button checked="fchecked" value="a">All</a-radio-button>
+        <a-radio-button value="b">Cleared for graduation</a-radio-button>
+      </a-radio-group>
         <v-divider
           class="mx-4"
           inset
@@ -283,13 +296,21 @@
 <script>
   // import mForm from "./form.vue"
   import api from "../../services/api";
+  
+import {   mdbEdgeHeader,  } from 'mdbvue';
   export default {
      components: {
+      mdbEdgeHeader
       // mForm
      },
      
     data: () => ({
-      loading1:true,
+      fStudents:'a',
+      fts:"All",
+      issued:0,
+      returned:0,
+      cert:0,
+      loading1:false,
       valid: true,
       name: '',
       nameRules: [
@@ -341,6 +362,7 @@
           { text: 'Email', value: 'email' },
           { text: 'Code ', value: 'code' },
           { text: 'admission ', value: 'admission' },
+          { text: 'gowns ', value: 'gowns' },
            { text: 'Actions', value: 'actions', sortable: false },
           // { text: 'Iron (%)', value: 'iron' },
         ],
@@ -456,13 +478,28 @@ this.loading = true;
       handleClick(row) {
       console.log(row.fat)
     },
+        fChange(){
+        // console.log(this.fStudents)
+        if(this.fStudents=="a"){
+        this.init()
+        this.fts="All"
+        }else if(this.fStudents=="b"){
+          this.cleare_user()
+          this.fts="Cleared";
+          // alert("b")
+        }
+      },
       init(){
       this.loading = true
       api.get('hod').then((response) => {
-        // console.log("mdata: "+ JSON.stringify(response.data.data));
+         console.log("mdata: "+ JSON.stringify(response.data.issued));
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
+              this.issued=response.data.issued;
+              this.returned=response.data.returned;
+              this.cleared=response.data.cleared;
+              this.cert=response.data.cert;
             }
             this.loading = false
     
@@ -473,6 +510,21 @@ this.loading = true;
             this.loading = false
         });
     },
+     cleare_user(){
+        this.loading = true;
+        const context=this;
+         
+        api.get("cleared_user").then((response) => {
+        console.log("switch response: "+ JSON.stringify(response.data));
+            if(response.data.val==2){ 
+           this.mdata = response.data.data;
+            }
+            this.loading = false
+  }).catch(function (response) {
+            console.log("error"+JSON.stringify(response))
+            context.loading = false
+        });
+      },
     
       editItem (item) {
         // this.editedIndex = this.mdata.indexOf(item)

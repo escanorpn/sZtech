@@ -28,13 +28,51 @@ class HodController extends Controller
         // ->where('hid','LIKE',"%{$hid}%")
         // ->andWhere('uid','LIKE',"%{$uid}%")
         // ->get();
+        $issued = DB::table('users')
+        // ->where('sid', '=', $request->sid)
+        ->where('gowns', '=','issued')
+        ->count();
+        $returned = DB::table('users')
+        ->where('gowns', '=','returned')
+        ->count();
+        $cleared = DB::table('users')
+        ->where('finance', '=','true')
+        ->where('lib', '=','true')
+        ->where('gown', '=','true')
+        ->count();
+        $cert = DB::table('users')
+        ->where('role','=','student')
+        ->where('cert_i', '=','issued')
+        // ->where('gown', '=','true')
+        ->count();
         return response()->json([
         "success" => true,
         "message" => "Item List",
         "val" => "2",
-        "data" => $item
+        "data" => $item,
+        "issued" => $issued,
+        "returned" => $returned,
+        "cleared" => $cleared,
+        "cert" => $cert
         ]);
     }
+    public function cleared_user()
+    {
+    
+        $item = DB::table('users')
+        ->where('role', '=','student')
+        ->where('finance', '=','true')
+        ->where('lib', '=','true')
+        ->where('gown', '=','true')
+        ->get();
+        return response()->json([
+        "success" => true,
+        "message" => "Item List",
+        "val" => "2",
+        "data" => $item,
+        ]);
+    }
+    
     public function HodStudents()
     {
         $users = DB::table('users')
@@ -101,6 +139,24 @@ class HodController extends Controller
             "data" => $item
         ]);
     }
+    
+    public function rupdate(Request $request)
+    {
+        $response = [];
+        $ids1=json_decode($request->id);
+        $affected=User::where('id', $request->id)->update(['cert_i' => $request->cert_i]);
+        $item =User::query()
+        ->where('role','LIKE','student')
+        ->get();
+        return response()->json([
+            "success" => true,
+            "val" => "2",
+            "message" => "Users successfully updated",
+            "affected" => $affected,
+            "data" => $item
+        ]);
+    }
+    
     public function update1(Request $request)
     {
         $response = [];

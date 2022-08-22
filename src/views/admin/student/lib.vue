@@ -12,7 +12,7 @@
 
             
 
-  <v-card style="margin-top:-72px">
+  <v-card style="margin-top:-12px">
   
     <v-card-title>
 
@@ -144,7 +144,7 @@
       fname:"",
       fcode:"",
       femail:"",
-      loading1:true,
+      loading1:false,
       valid: true,
       name: '',
       nameRules: [
@@ -345,10 +345,11 @@ this.loading = true;
         //    this.$router.push('/lib');
         // }
         const mdata={
-          id:this.$store.state.id,
+          // id:this.$store.state.id,
+          id : localStorage.getItem('user_id')
         }
       this.loading = true
-      api.post('lib_d',mdata).then((response) => {
+      api.post('slib_d',mdata).then((response) => {
         console.log("lib data: "+ JSON.stringify(response.data));
    
             

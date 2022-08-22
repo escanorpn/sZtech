@@ -45,10 +45,17 @@ Route::group(['middleware' => ['role:admin'],
 'prefix' => 'auth'], function() {
     Route::post('/role', [RoleController::class, 'create']); 
 });
+Route::group(['middleware' => ['role:rec'],
+'prefix' => 'auth'], function() {
+    Route::get('/rec', [HodController::class, 'index']);
+    Route::get('/rcleared_user', [HodController::class, 'cleared_user']);  
+    Route::post('/rec_u', [HodController::class, 'rupdate']); 
+});
 
 Route::group(['middleware' => ['role:hod'],
 'prefix' => 'auth'], function() {
-    Route::get('/hod', [HodController::class, 'index']); 
+    Route::get('/hod', [HodController::class, 'index']);
+    Route::get('/cleared_user', [HodController::class, 'cleared_user']); 
     Route::get('/hod_a', [HodController::class, 'HodStudents']); 
     Route::post('/hod', [HodController::class, 'create']); 
     Route::post('/hod_u', [HodController::class, 'update']); 
@@ -101,6 +108,11 @@ Route::group(['middleware' => ['role:student'],
     Route::post('/student_f', [student::class, 'financeData']);
     Route::post('/student_g', [student::class, 'gownData']);
     Route::post('/student_u', [student::class, 'updateData']); 
+
+    
+    Route::post('/slib_d', [LibController::class, 'Libdata']); 
+    Route::post('/sfinance_d', [FinanceController::class, 'Userdata']);
+    Route::post('/sgown_d', [GownController::class, 'Userdata']); 
 });
 
 

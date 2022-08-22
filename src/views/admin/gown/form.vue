@@ -74,6 +74,7 @@
       :label="switch2"
        @change="cleare_user"
     ></v-switch>
+    
         <!-- <v-toolbar-title>My CRUD</v-toolbar-title> -->
         <v-divider
           class="mx-4"
@@ -393,7 +394,7 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
               console.log(response.data.switch)
             
               this.switch2="not cleared"
-              if(response.data.switch[0].gown==1){
+              if(response.data.switch[0].gown==true){
                 this.switch2="cleared"
               }
               

@@ -12,7 +12,7 @@
 
             
 
-  <v-card style="margin-top:-72px">
+  <v-card style="margin-top:-12px">
   
     <v-card-title>
       <v-text-field
@@ -140,7 +140,7 @@
       fname:"",
       fcode:"",
       femail:"",
-      loading1:true,
+      loading1:false,
       valid: true,
       name: '',
       nameRules: [
@@ -335,10 +335,11 @@ let mgo="finance_u"
           //  this.$router.push('/finance');
         }
         const mdata={
-          id:this.$store.state.id,
+          id : localStorage.getItem('user_id')
+          // id:this.$store.state.id,
         }
       this.loading = true
-      api.post('finance_d',mdata).then((response) => {
+      api.post('sfinance_d',mdata).then((response) => {
         console.log("finance data: "+ JSON.stringify(response.data));
    
             

@@ -30,7 +30,8 @@ class student extends Controller
         $name=$request->name;
         $email=$request->email;
         $number=$request->number;
-        $affected=User::where('id', $id)->update(['name' => $name,'email' => $email,'number' => $number]);
+        // $affected=User::where('id', $id)->update(['name' => $name,'email' => $email,'number' => $number]);
+        $affected=User::where('id', $id)->update(['name' => $name]);
         return response()->json([
             "success" => true,
             "val" => "2", 

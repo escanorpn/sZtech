@@ -2,11 +2,16 @@
 <div>
    <!-- background: linear-gradient(rgb(0, 0, 0), rgb(0 0 0 / 88%), rgb(0 0 0 / 30%) 100%) -->
   <mdb-navbar  v-bind:class = "isMobile()?'mNavc':'dNavc'"   color="info" position="top" dark transparent scrolling style=" width:100%">
-    <mdb-navbar-brand to="/" >
+    <mdb-navbar-brand >
            <!-- <img src="./assets/img/flogo.jpeg" alt=" Cloudia" style="max-width:43px;background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgb(0 0 0 / 0%) 100%);border-radius: 5px;" > -->
            <span style="color: white;font-weight: 500;text-shadow: rgb(203 109 255) 1px 1px 2px;">
     Zetech </span>
     </mdb-navbar-brand>
+          <mdb-navbar-nav right>  
+       
+        <mdb-nav-item  class="nav_text"  to="/" @click="logout">  <span style="color: white;font-weight: 500;text-shadow: rgb(203 109 255) 1px 1px 2px;">
+    Logout </span> </mdb-nav-item>
+      </mdb-navbar-nav>
 
   </mdb-navbar>
    <main :style="{ marginTop: $store.state.docs ? '0px' : '0px' }">
@@ -28,7 +33,7 @@
     </div>
 </template>
 <script>
-  import { mdbNavbar, mdbNavbarBrand,  
+  import { mdbNavbar, mdbNavbarBrand, mdbNavbarNav, mdbNavItem, 
   // mdbNavbarNav,
   // mdbNavbarToggler,
   //  mdbNavItem,
@@ -51,6 +56,7 @@ import { isMobile } from 'mobile-device-detect';
     components: {
       mdbNavbar,
       mdbNavbarBrand,
+      mdbNavbarNav, mdbNavItem,
       // mdbNavbarNav,
       // mdbNavbarToggler,
       // mdbNavItem,
@@ -60,6 +66,10 @@ import { isMobile } from 'mobile-device-detect';
      
     },
     methods: {
+      logout(){
+        // alert("foo")
+        localStorage.clear();
+      },
       add2cart(){
         if(this.$cookies.isKey("mp")){
           var mCarray=JSON.parse(this.$cookies.get("mp"))

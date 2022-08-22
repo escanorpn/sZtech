@@ -14,6 +14,7 @@ import Financef from './views/admin/finance/form.vue'
 import Gown from './views/admin/gown/main.vue'
 import Gownf from './views/admin/gown/form.vue'
 import Student from './views/admin/student/main.vue'
+import Rec from './views/admin/rec/main.vue'
 import Products from './views/admin/products.vue'
 
 
@@ -103,6 +104,12 @@ export default new Router({
       path: '/student',
       name: 'Student',
       component: Student,
+      beforeEnter:isLoggedIn
+    },
+    {
+      path: '/rec',
+      name: 'Rec',
+      component: Rec,
       beforeEnter:isLoggedIn
     },
     

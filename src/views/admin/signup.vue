@@ -30,6 +30,7 @@
     <!-- <imd src="../../s/s1/api.php"/> -->
       
     </mdb-card-body>
+    <mdb-btn style="color:#e9ecef;background: linear-gradient(315deg,#3f0d12,#a71d31 74%);box-shadow: rgb(38 3 3) 1px 5px 5px;" color="" v-on:click="login" :disabled="sending">Log in</mdb-btn>
   </mdb-card>
   <!-- Card -->
        <div class="position-absolute w-100 z-index-1 bottom-0" style="margin-top:303px">
@@ -92,6 +93,9 @@
     });
   },
   methods: {
+    login(){
+       this.$router.push('/');
+    },
     // Only show error after a field is touched.
     userNameError() {
       const { getFieldError, isFieldTouched } = this.form;
@@ -106,7 +110,7 @@
     handleSubmit(e) {
       
       e.preventDefault();
-     
+     const context=this;
       //  alert(this.loading1)
       if(this.name==""){
         alert ("please input full name");
@@ -130,7 +134,7 @@
       // console.log(this.pass);
 
       this.sending=true;
-
+console.log('signup Data: '+form_data)
 api.post('signup',form_data).then((response) => {
    this.loading1=false;
    console.log("response: "+ JSON.stringify(response.data));
@@ -139,26 +143,48 @@ api.post('signup',form_data).then((response) => {
       alert(JSON.stringify(response.data.message))
    }else if(response.data.val==2 & !response.data.error){
     let access_token=response.data.token.original.access_token;
+    let mid=response.data.token.original.user.id
+    let mrole=response.data.token.original.user.role
     this.$store.commit('setApikey',access_token)
     this.$store.commit('setRole',response.data.role)
      localStorage.setItem('access_token', access_token)
+      localStorage.setItem('user_id', mid)
     // console.log("response1: "+ JSON.stringify(access_token));
     // console.log("response2: "+ this.$store.state.access_token);
     this.sending=false;
+     if(mrole=='student'){
+       this.$router.push('/student');
+    window.location.reload();
+    }else if(mrole=='lib'){
+      this.$router.push('/lib');
+      window.location.reload();
+    }else if(mrole=='hod'){
+      this.$router.push('/hod');
+      window.location.reload();
+    }else if(mrole=='gown'){
+      this.$router.push('/gown');
+      window.location.reload();
+    }else if(mrole=='finance'){
+      this.$router.push('/finance');
+      window.location.reload();
+    }else if(mrole=='rec'){
+      this.$router.push('/rec');
+      window.location.reload();
+    }
     // if(response.data.role=="hod"){
 
     // }
     // this.$router.push('/Products');
-    window.location.reload();
+    // window.location.reload();
    }
 }).catch(function () {
           //handle error
           // alert("msg: "+e)
           // console.log("error: "+response)
-           this.loading1=false;
+           context.loading1=false;
       });
 
-      this.sending=false;
+      context.sending=false;
 
     },
     hName (val) {

@@ -30,10 +30,14 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            // return response()->json($validator->errors(), 422);
+            
+        return response()->json(['val' => '3','msg'=>'User not Authorised please check email and password and try again']);
         }
         if (! $token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized1'], 401);
+            // return response()->json(['error' => 'Unauthorized1'], 401);
+            
+        return response()->json(['val' => '3','msg'=>'User not Authorised please check email and password and try again']);
         }
         return response()->json(['val' => '22','token'=>$this->createNewToken($token)]);
         // return $this->createNewToken($token);
@@ -86,6 +90,8 @@ class AuthController extends Controller
             $role="lib";
         }else if($code=="G-Ztech"){
             $role="gown";
+        }else if($code=="R-Ztech"){
+            $role="rec";
         }
         $user=new User();
         $user->name=$request->name;

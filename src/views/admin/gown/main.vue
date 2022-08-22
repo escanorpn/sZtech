@@ -56,7 +56,7 @@
       >
        <a-radio-group v-model="fStudents" @change="fChange" size="small">
         <a-radio-button checked="fchecked" value="a">All</a-radio-button>
-        <!-- <a-radio-button value="b">Admitted</a-radio-button> -->
+        <a-radio-button value="b">Admitted</a-radio-button>
         <a-radio-button value="c">Gown</a-radio-button>
         <!-- <a-radio-button value="d">Chengdu</a-radio-button> -->
       </a-radio-group>
@@ -349,6 +349,7 @@
           // { text: 'Role', value: 'role' },
           { text: 'Email', value: 'email' },
           { text: 'Code ', value: 'code' },
+          { text: 'gowns ', value: 'gowns' },
           // { text: 'admission ', value: 'admission' },
            { text: 'Actions', value: 'actions', sortable: false },
           // { text: 'Iron (%)', value: 'iron' },
@@ -537,7 +538,7 @@
       },
     },
      mounted() {
-      this.init()
+      this.All()
      }
   }
 </script>

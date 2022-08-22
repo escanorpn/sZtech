@@ -7,7 +7,7 @@
       color="#3c0d0b"
       flat
     >
-       <h4 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;text-shadow: #cb6dff 1px 1px 2px;margin-top: 5px;margin-left: auto;margin-right: auto;" >Library</h4>
+       <h4 class="text-white pt-3 mt-n5" style=" font-weight: 900;color: #ffffff;text-shadow: #cb6dff 1px 1px 2px;margin-top: 5px;margin-left: auto;margin-right: auto;" >Finance</h4>
     </v-app-bar>
 
     <v-main class="grey lighten-3">

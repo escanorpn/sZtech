@@ -115,30 +115,53 @@
       console.log(this.pass);
 
       this.sending=true;
-//  const data = { 
-//     email:this.email ,
-//     password:this.pass
-//  };
- const data ={
-  "email": "admin@gmail.com",
-  "password": "password"
- }
+ const data = { 
+    email:this.email ,
+    password:this.pass
+ };
+//  const data ={
+//   "email": "admin@gmail.com",
+//   "password": "password"
+//  }
       // console.log(article)
 // var murl=this.$store.state.mUrl;
 // alert(murl);
 api.post('login',data).then((response) => {
    this.loading1=false;
-   console.log("response: "+ JSON.stringify(response));
+   console.log("user_response: "+ JSON.stringify(response.data));
+   let mid=response.data.token.original.user.id
+   let mrole=response.data.token.original.user.role
    let access_token=response.data.token.original.access_token;
+  //  alert("foo")
    if(response.data.val==22 & !response.data.error){
     this.$store.commit('setApikey',access_token)
      localStorage.setItem('access_token', access_token)
+     localStorage.setItem('user_id', mid)
     // console.log("response1: "+ JSON.stringify(access_token));
     // console.log("response2: "+ this.$store.state.access_token);
     this.sending=false;
-
-    this.$router.push('/Products');
+    if(mrole=='student'){
+       this.$router.push('/student');
     window.location.reload();
+    }else if(mrole=='lib'){
+      this.$router.push('/lib');
+      window.location.reload();
+    }else if(mrole=='hod'){
+      this.$router.push('/hod');
+      window.location.reload();
+    }else if(mrole=='gown'){
+      this.$router.push('/gown');
+      window.location.reload();
+    }else if(mrole=='finance'){
+      this.$router.push('/finance');
+      window.location.reload();
+    }else if(mrole=='rec'){
+      this.$router.push('/rec');
+      window.location.reload();
+    }
+
+    // this.$router.push('/Products');
+    // window.location.reload();
    }
 }).catch(function () {
           //handle error
