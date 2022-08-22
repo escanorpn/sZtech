@@ -124,3 +124,8 @@ Route::get('/product', [ProductController::class, 'index']);
 Route::get('/product_limited', [ProductController::class, 'index_limited']);
 Route::get('/project', [ProjectController::class, 'index']);
 Route::get('/recipe', [RecipeController::class, 'index']);
+
+Route::get('/', function()
+{
+    return 'Hello World';
+});
