@@ -35,11 +35,23 @@ class HodController extends Controller
         $returned = DB::table('users')
         ->where('gowns', '=','returned')
         ->count();
+        
+        // $cleared = DB::table('users')
+        // ->where('finance', '=','true')
+        // ->where('lib', '=','true')
+        // ->where('gown', '=','true')
+        // ->count();
+        
         $cleared = DB::table('users')
+        ->where('role', '=','student')
         ->where('finance', '=','true')
+        ->orWhere('finance', '=', 1)
         ->where('lib', '=','true')
+        ->orWhere('lib', '=', 1)
         ->where('gown', '=','true')
+        ->orWhere('gown', '=', 1)
         ->count();
+
         $cert = DB::table('users')
         ->where('role','=','student')
         ->where('cert_i', '=','issued')
