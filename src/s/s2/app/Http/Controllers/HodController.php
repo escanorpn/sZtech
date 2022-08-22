@@ -63,7 +63,7 @@ class HodController extends Controller
         ->where('role', '=','student')
         ->where('finance', '=','true')
         >orWhere('finance', '=', 1)
-        ->where('lib', '=','true',)
+        ->where('lib', '=','true')
         ->orWhere('lib', '=', 1)
         ->where('gown', '=','true')
         ->orWhere('gown', '=', 1)
