@@ -62,8 +62,11 @@ class HodController extends Controller
         $item = DB::table('users')
         ->where('role', '=','student')
         ->where('finance', '=','true')
-        ->where('lib', '=','true')
+        >orWhere('finance', '=', 1)
+        ->where('lib', '=','true',)
+        ->orWhere('lib', '=', 1)
         ->where('gown', '=','true')
+        ->orWhere('gown', '=', 1)
         ->get();
         return response()->json([
         "success" => true,
