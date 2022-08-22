@@ -62,7 +62,7 @@ class HodController extends Controller
         $item = DB::table('users')
         ->where('role', '=','student')
         ->where('finance', '=','true')
-        >orWhere('finance', '=', 1)
+        ->orWhere('finance', '=', 1)
         ->where('lib', '=','true')
         ->orWhere('lib', '=', 1)
         ->where('gown', '=','true')
