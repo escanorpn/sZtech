@@ -234,9 +234,9 @@
     <v-text-field
       v-model="name"
       :counter="10"
-      :rules="nameRules"
+  
       label="Name"
-      required
+     
     ></v-text-field>
 
     <v-text-field
@@ -253,7 +253,6 @@
       label="status"
       required
     ></v-select>
-
 
     <v-btn
       :disabled="!valid"
@@ -408,6 +407,9 @@ import {   mdbEdgeHeader,mdbBtn  } from 'mdbvue';
       // this.initialize()
     },
     methods:{
+      fChange(){
+  console.log(this.fStudents);
+      },
         cleare_user(){
         this.switch2="processing..."
         this.loading = true;
@@ -458,6 +460,9 @@ let mgo="finance_u"
             
             if(response.data.val==2){ 
               this.mdata = response.data.data;
+               this.fPending=response.data.pending;
+              this.fPayed=response.data.payed;
+              this.fBalance= parseInt(this.fPending)-parseInt(this.fPayed);
               this.sItem = false
             }
             this.loading = false
@@ -618,15 +623,19 @@ let mgo="finance_u"
         // }
         this.close()
         this.loading = true;
+           console.log(this.fStudents);
+        let mgo="pending"
+        if(this.fStudents=="b"){
+          mgo="payed"
+        }
         const mData={
           sid:this.$store.state.id,
           name:this.addedItem.name,
-          value:this.addedItem.value
+          value:this.addedItem.value,
+          status:mgo,
         }
-        let mgo="finance_u"
-        if(this.fStudents=="b"){
-          mgo="payment"
-        }
+     
+         mgo="payment"
         api.post(mgo,mData).then((response) => {
         console.log("update response: "+ JSON.stringify(response));
             

@@ -152,7 +152,8 @@ class FinanceController extends Controller
         $item->sid = $request->sid;
         $item->name =$request->name;
         $item->value = $request->value;
-        $item->status = "payed";
+        $item->status = $request->status;
+        // $item->status = "payed";
         $item->save();
 
         $item1 = DB::table('finances')
@@ -246,7 +247,7 @@ class FinanceController extends Controller
     public function update1(Request $request)
     {
         $response = [];
-        $affected=FInance::where('id', $request->id)->update(['name' => $request->name,
+        $affected=Finance::where('id', $request->id)->update(['name' => $request->name,
         'value' => $request->value,'status' => $request->status,]);
         $item1 = DB::table('finances')
         ->where('sid', '=', $request->sid)
